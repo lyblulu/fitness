@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gym-dark text-gym-text font-body;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gym-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gym-muted rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gym-accent;
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl uppercase tracking-wider text-white;
+  }
+
+  .section-subtitle {
+    @apply text-gym-text/70 text-lg max-w-2xl;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-gym-accent/10;
+  }
+
+  .btn-primary {
+    @apply inline-block px-8 py-3 bg-gym-accent text-white font-bold uppercase tracking-wider
+           rounded-sm transition-all duration-300 hover:bg-white hover:text-gym-dark;
+  }
+
+  .btn-ghost {
+    @apply inline-block px-8 py-3 border border-gym-accent text-gym-accent font-bold uppercase tracking-wider
+           rounded-sm transition-all duration-300 hover:bg-gym-accent hover:text-white;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gym-accent via-gym-gold to-gym-accent;
+  }
+
+  .glass-card {
+    @apply bg-gym-card/80 backdrop-blur-sm border border-white/5 rounded-sm;
+  }
+}
