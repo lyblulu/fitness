@@ -4,6 +4,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/fitness/',
+  server: {
+    allowedHosts: ['.trycloudflare.com'],
+  },
   build: {
     sourcemap: 'hidden',
   },
