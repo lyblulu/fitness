@@ -4,8 +4,9 @@ import { nutritionPlans } from "@/data/nutrition";
 
 export default function NutritionOverview() {
   return (
-    <section className="py-20 md:py-32 bg-gym-darker/50">
-      <div className="container mx-auto px-4">
+    <section className="py-20 md:py-32 bg-gym-darker/50 relative">
+      <div className="absolute inset-0 bg-grid opacity-20" />
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <h2 className="section-title mb-4">营养饮食</h2>
           <p className="section-subtitle mx-auto">
@@ -18,32 +19,41 @@ export default function NutritionOverview() {
             <Link
               key={plan.title}
               to="/nutrition"
-              className="glass-card p-8 card-hover group opacity-0 animate-fade-up"
+              className="glass-card p-8 card-hover group opacity-0 animate-fade-up relative overflow-hidden"
               style={{ animationDelay: `${0.2 + index * 0.2}s`, animationFillMode: "forwards" }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                {index === 0 ? (
-                  <Flame className="w-6 h-6 text-gym-accent" />
-                ) : (
-                  <Apple className="w-6 h-6 text-gym-accent" />
-                )}
-                <h3 className="font-display text-2xl text-white tracking-wider">{plan.title.split("（")[0]}</h3>
-              </div>
-              <p className="text-gym-text/60 text-sm leading-relaxed mb-4">
-                {plan.description}
-              </p>
-              <div className="flex items-center gap-6 mb-6">
-                <div>
-                  <span className="text-gym-accent font-display text-2xl">{plan.totalCalories}</span>
-                  <span className="text-gym-text/40 text-xs ml-1">kcal/日</span>
+              {/* Decorative corner */}
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-gym-accent/5 to-transparent rounded-bl-full" />
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-gym-accent/5 to-transparent rounded-tr-full" />
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-gym-accent/10 rounded-sm">
+                    {index === 0 ? (
+                      <Flame className="w-5 h-5 text-gym-accent" />
+                    ) : (
+                      <Apple className="w-5 h-5 text-gym-accent" />
+                    )}
+                  </div>
+                  <h3 className="font-display text-2xl text-white tracking-wider">{plan.title.split("（")[0]}</h3>
                 </div>
-                <div className="text-gym-text/40 text-sm">
-                  {plan.meals.length}餐/日
+                <p className="text-gym-text/60 text-sm leading-relaxed mb-4">
+                  {plan.description}
+                </p>
+                <div className="flex items-center gap-6 mb-6">
+                  <div className="bg-gym-dark/50 px-4 py-2 rounded-sm border border-white/5">
+                    <span className="text-gym-accent font-display text-2xl">{plan.totalCalories}</span>
+                    <span className="text-gym-text/40 text-xs ml-1">kcal/日</span>
+                  </div>
+                  <div className="text-gym-text/40 text-sm flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-gym-accent rounded-full" />
+                    {plan.meals.length}餐/日
+                  </div>
                 </div>
-              </div>
-              <div className="flex items-center gap-2 text-gym-accent text-sm uppercase tracking-wider font-bold group-hover:gap-4 transition-all">
-                <span>查看详情</span>
-                <ArrowRight className="w-4 h-4" />
+                <div className="flex items-center gap-2 text-gym-accent text-sm uppercase tracking-wider font-bold group-hover:gap-4 transition-all">
+                  <span>查看详情</span>
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </div>
               </div>
             </Link>
           ))}

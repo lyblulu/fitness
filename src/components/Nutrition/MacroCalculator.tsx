@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Beef, Wheat, Flame, Target, Ruler, Weight, Calculator, ArrowRight, RefreshCw, UtensilsCrossed } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Beef, Wheat, Flame, Target, Ruler, Weight, Calculator, ArrowRight, RefreshCw, UtensilsCrossed, Dumbbell } from "lucide-react";
 import { dishes } from "@/data/dishes";
 
 type Goal = "增肌" | "减脂";
@@ -86,6 +87,7 @@ export default function MacroCalculator() {
   const [activity, setActivity] = useState<Activity>("中等");
   const [result, setResult] = useState<Result | null>(null);
   const [calculated, setCalculated] = useState(false);
+  const navigate = useNavigate();
 
   const handleCalc = () => {
     const w = parseFloat(weight);
@@ -378,6 +380,29 @@ export default function MacroCalculator() {
                           </div>
                         ))}
                     </div>
+                  </div>
+
+                  {/* Training Recommendation */}
+                  <div className="glass-card p-6 border-gym-accent/20">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Dumbbell className="w-5 h-5 text-gym-accent" />
+                      <h3 className="text-white font-semibold text-sm">
+                        {goal === "增肌" ? "推荐方案：增肌训练" : "推荐方案：减脂训练"}
+                      </h3>
+                    </div>
+                    <p className="text-gym-text/70 text-sm mb-4">
+                      {goal === "增肌"
+                        ? "根据你的身体数据和增肌目标，建议你开始增肌训练计划，配合高蛋白饮食，最大化肌肉增长效果。"
+                        : "根据你的身体数据和减脂目标，建议你开始减脂训练计划，配合热量控制饮食，高效燃烧脂肪。"}
+                    </p>
+                    <button
+                      onClick={() => navigate(`/training?plan=${goal === "增肌" ? "muscle" : "fatloss"}`)}
+                      className="w-full btn-primary py-3 text-sm inline-flex items-center justify-center gap-2"
+                    >
+                      <Dumbbell className="w-4 h-4" />
+                      查看{goal === "增肌" ? "增肌" : "减脂"}训练计划
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
               ) : (

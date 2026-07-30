@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Sparkles } from "lucide-react";
 
 const slogans = [
   "请再次跳动那颗不服输的心脏",
@@ -39,9 +39,11 @@ function getRandomIndex(current: number): number {
 
 export default function SloganBanner() {
   const [index, setIndex] = useState(0);
+  const [fadeKey, setFadeKey] = useState(0);
 
   const next = useCallback(() => {
     setIndex((prev) => getRandomIndex(prev));
+    setFadeKey((k) => k + 1);
   }, []);
 
   useEffect(() => {
@@ -50,23 +52,25 @@ export default function SloganBanner() {
   }, [next]);
 
   return (
-    <div className="sticky top-16 md:top-20 z-40 bg-gym-accent/5 border-b border-gym-accent/10">
+    <div className="sticky top-16 md:top-20 z-40 bg-gradient-to-r from-gym-accent/5 via-gym-accent/10 to-gym-accent/5 border-b border-gym-accent/10">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center gap-3 py-2.5">
+          <Sparkles className="w-3.5 h-3.5 text-gym-gold/60 shrink-0 hidden sm:block" />
           <button
             onClick={next}
             className="flex items-center gap-2 text-gym-accent/60 hover:text-gym-accent transition-colors shrink-0"
             title="换一条"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5 transition-transform duration-500 hover:rotate-180" />
           </button>
           <p
-            key={index}
-            className="text-gym-accent/90 text-sm md:text-base tracking-wide animate-fade-in cursor-pointer select-none"
+            key={fadeKey}
+            className="text-gym-accent/90 text-sm md:text-base tracking-wide cursor-pointer select-none animate-fade-in"
             onClick={next}
           >
             {slogans[index]}
           </p>
+          <Sparkles className="w-3.5 h-3.5 text-gym-gold/60 shrink-0 hidden sm:block" />
         </div>
       </div>
     </div>

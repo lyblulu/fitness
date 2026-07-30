@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { splitPlans } from "@/data/training";
 import { Play, Dumbbell, Flame } from "lucide-react";
 
@@ -6,8 +7,19 @@ const musclePlans = splitPlans.filter((p) => p.type !== "减脂");
 const fatLossPlans = splitPlans.filter((p) => p.type === "减脂");
 
 export default function SplitPlan() {
+  const [searchParams] = useSearchParams();
   const [category, setCategory] = useState<"muscle" | "fatloss">("muscle");
   const [activePlan, setActivePlan] = useState(0);
+
+  useEffect(() => {
+    const plan = searchParams.get("plan");
+    if (plan === "fatloss") {
+      setCategory("fatloss");
+    } else {
+      setCategory("muscle");
+      setActivePlan(0);
+    }
+  }, [searchParams]);
 
   const currentPlans = category === "muscle" ? musclePlans : fatLossPlans;
   const plan = currentPlans[category === "fatloss" ? 0 : activePlan];
@@ -15,9 +27,14 @@ export default function SplitPlan() {
   return (
     <section className="py-20 md:py-32 bg-gym-darker/50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="section-title mb-4">训练计划详情</h2>
-          <p className="section-subtitle mx-auto">{plan.description}</p>
+        <div className="text-center mb-16">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Dumbbell className="w-7 h-7 text-gym-accent" />
+            <h2 className="section-title">健身房训练</h2>
+          </div>
+          <p className="section-subtitle mx-auto">
+            专业健身房训练计划，涵盖增肌与减脂，自由重量与固定器械结合，满足不同训练目标
+          </p>
         </div>
 
         {/* Category Tabs */}
@@ -65,12 +82,21 @@ export default function SplitPlan() {
           </div>
         )}
 
+        {/* Plan Description */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <div className="glass-card p-5 text-center">
+            <p className="text-gym-text/70 text-sm leading-relaxed">{plan.description}</p>
+          </div>
+        </div>
+
         {/* Training Days Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {plan.days.map((day, index) => (
             <div
               key={day.dayName}
-              className="glass-card p-6 md:p-8 opacity-0 animate-fade-up"
+              className={`glass-card p-6 opacity-0 animate-fade-up ${
+                plan.days.length === 4 && index === 3 ? "md:col-start-2" : ""
+              }`}
               style={{ animationDelay: `${0.1 + index * 0.15}s`, animationFillMode: "forwards" }}
             >
               <div className="flex items-center gap-3 mb-4">

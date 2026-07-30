@@ -6,13 +6,17 @@ import WaterOverview from "@/components/Home/WaterOverview";
 import ForumOverview from "@/components/Home/ForumOverview";
 import SleepOverview from "@/components/Home/SleepOverview";
 import LatestArticles from "@/components/Home/LatestArticles";
+import MacroCalculator from "@/components/Nutrition/MacroCalculator";
+import WorkoutOverview from "@/components/Home/WorkoutOverview";
 
 export default function Home() {
   return (
     <main>
       <Hero />
+      <MacroCalculator />
       <TrainingOverview />
       <NutritionOverview />
+      <WorkoutOverview />
       <MusicOverview />
       <WaterOverview />
       <ForumOverview />
