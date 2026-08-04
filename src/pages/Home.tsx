@@ -1,6 +1,6 @@
 import Hero from "@/components/Home/Hero";
 import TrainingOverview from "@/components/Home/TrainingOverview";
-import NutritionOverview from "@/components/Home/NutritionOverview";
+import MacroCalculator from "@/components/Nutrition/MacroCalculator";
 import MusicOverview from "@/components/Home/MusicOverview";
 import WaterOverview from "@/components/Home/WaterOverview";
 import ForumOverview from "@/components/Home/ForumOverview";
@@ -12,7 +12,7 @@ export default function Home() {
     <main>
       <Hero />
       <TrainingOverview />
-      <NutritionOverview />
+      <MacroCalculator />
       <MusicOverview />
       <WaterOverview />
       <ForumOverview />
