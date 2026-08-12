@@ -43,10 +43,18 @@ export default function MealPlan() {
                 {meal.image && (
                   <div className="md:w-48 h-48 md:h-auto bg-cover bg-center shrink-0" style={{ backgroundImage: `url(${meal.image})` }} />
                 )}
-                <div className="p-6 md:p-8 flex-1 flex flex-col md:flex-row md:items-center gap-6">
-                  <div className="md:w-40 shrink-0">
+                <div className="p-6 md:p-8 flex-1 flex flex-col md:flex-row md:items-center gap-4">
+                  <div className="md:w-44 shrink-0">
                     <h3 className="font-display text-lg text-white tracking-wider">{meal.meal}</h3>
                     <p className="text-gym-accent font-display text-xl">{meal.calories} kcal</p>
+                    <div className="flex items-center gap-3 mt-2">
+                      <span className="text-xs bg-gym-accent/10 text-gym-accent px-2 py-0.5 rounded-sm">
+                        碳水 {meal.carbs}g
+                      </span>
+                      <span className="text-xs bg-gym-gold/10 text-gym-gold px-2 py-0.5 rounded-sm">
+                        蛋白 {meal.protein}g
+                      </span>
+                    </div>
                   </div>
                   <div className="flex-1">
                     <div className="flex flex-wrap gap-2">

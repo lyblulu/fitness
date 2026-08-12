@@ -13,7 +13,7 @@ export interface TrainingDay {
 }
 
 export interface SplitPlan {
-  type: '二分化' | '三分化' | '四分化' | '五分化' | '减脂';
+  type: '三分化' | '四分化' | '五分化' | '减脂';
   description: string;
   days: TrainingDay[];
 }
@@ -25,38 +25,8 @@ export interface BodyPartExercise {
 
 export const splitPlans: SplitPlan[] = [
   {
-    type: '二分化',
-    description: '上下肢二分化训练是最经典的入门分化方案，每周训练4天，每个部位每周训练2次。适合没有太多空余时间但又想保持健康身体的人群，高效实用。',
-    days: [
-      {
-        dayName: '上肢日（胸部+背部+肩部+手臂）',
-        bodyParts: ['胸', '背', '肩', '肱二头', '肱三头'],
-        exercises: [
-          { name: '杠铃平板卧推', sets: 4, reps: '8-12', notes: '上肢日的核心推力动作', videoQuery: '杠铃平板卧推标准动作教学' },
-          { name: '杠铃划船', sets: 4, reps: '8-12', notes: '保持背部挺直', videoQuery: '杠铃划船正确姿势' },
-          { name: '杠铃站姿推举', sets: 3, reps: '8-12', videoQuery: '杠铃站姿推举教学' },
-          { name: '高位下拉', sets: 3, reps: '10-12', videoQuery: '高位下拉标准动作' },
-          { name: '杠铃弯举（肱二头）', sets: 3, reps: '10-12', videoQuery: '杠铃弯举标准动作' },
-          { name: '绳索下压（肱三头）', sets: 3, reps: '10-15', videoQuery: '绳索下压肱三头肌训练' },
-        ],
-      },
-      {
-        dayName: '下肢日（股四头+腘绳肌+臀部+小腿+腹部）',
-        bodyParts: ['腿部', '腹'],
-        exercises: [
-          { name: '杠铃深蹲', sets: 4, reps: '8-10', notes: '核心动作，深度至大腿平行地面', videoQuery: '杠铃深蹲标准动作教学' },
-          { name: '罗马尼亚硬拉', sets: 4, reps: '8-12', videoQuery: '罗马尼亚硬拉正确姿势' },
-          { name: '腿举', sets: 3, reps: '10-12', videoQuery: '腿举标准动作' },
-          { name: '腿弯举', sets: 3, reps: '12-15', videoQuery: '腿弯举正确姿势' },
-          { name: '站姿提踵', sets: 4, reps: '15-20', videoQuery: '站姿提踵训练' },
-          { name: '悬垂举腿（腹部）', sets: 3, reps: '15-20', videoQuery: '悬垂举腿正确做法' },
-        ],
-      },
-    ],
-  },
-  {
     type: '三分化',
-    description: '推/拉/腿三分化训练是经典的训练频率优化方案，每周训练6天，每个部位每周训练2次。适合学生党等时间相对充裕、追求高效进步的训练者。',
+    description: '推/拉/腿三分化训练是经典的训练分化方案，每周训练3天，每个部位每周训练1次。适合学生党等时间相对充裕、追求高效进步的训练者。训练日之间安排休息日，保证充分恢复。',
     days: [
       {
         dayName: '推日（胸部+肩部+肱三头）',
@@ -68,6 +38,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '杠铃站姿推举', sets: 4, reps: '8-12', notes: '核心收紧，避免腰部代偿', videoQuery: '杠铃站姿推举教学' },
           { name: '哑铃侧平举', sets: 4, reps: '12-15', videoQuery: '哑铃侧平举正确做法' },
           { name: '绳索下压（肱三头）', sets: 4, reps: '10-15', videoQuery: '绳索下压肱三头肌训练' },
+          { name: '坐姿推胸机', sets: 3, reps: '10-12', notes: '固定器械，控制收缩', videoQuery: '坐姿推胸机标准动作' },
+          { name: '龙门架夹胸', sets: 3, reps: '12-15', notes: '孤立胸肌，顶峰收缩', videoQuery: '龙门架夹胸标准动作' },
         ],
       },
       {
@@ -80,6 +52,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '坐姿绳索划船', sets: 3, reps: '12-15', videoQuery: '坐姿绳索划船教学' },
           { name: '杠铃弯举（肱二头）', sets: 4, reps: '10-12', videoQuery: '杠铃弯举标准动作' },
           { name: '锤式弯举', sets: 3, reps: '12-15', videoQuery: '锤式弯举正确做法' },
+          { name: '坐姿划船机', sets: 3, reps: '10-12', notes: '固定器械，感受背部挤压', videoQuery: '坐姿划船机标准动作' },
+          { name: '引体向上助力机', sets: 3, reps: '8-12', notes: '适合力量不足时使用', videoQuery: '引体向上助力机使用方法' },
         ],
       },
       {
@@ -92,6 +66,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '腿弯举', sets: 3, reps: '12-15', videoQuery: '腿弯举正确姿势' },
           { name: '站姿提踵', sets: 4, reps: '15-20', videoQuery: '站姿提踵训练' },
           { name: '悬垂举腿（腹部）', sets: 4, reps: '15-20', videoQuery: '悬垂举腿正确做法' },
+          { name: '哈克深蹲机', sets: 3, reps: '10-12', notes: '固定器械，安全上大重量', videoQuery: '哈克深蹲机标准动作' },
+          { name: '坐姿腿屈伸', sets: 3, reps: '12-15', notes: '孤立股四头肌', videoQuery: '坐姿腿屈伸标准动作' },
         ],
       },
     ],
@@ -110,6 +86,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '哑铃飞鸟', sets: 3, reps: '12-15', videoQuery: '哑铃飞鸟标准动作' },
           { name: '绳索下压', sets: 4, reps: '10-15', videoQuery: '绳索下压肱三头肌训练' },
           { name: '窄距卧推', sets: 3, reps: '10-12', videoQuery: '窄距卧推肱三头肌' },
+          { name: '坐姿推胸机', sets: 3, reps: '10-12', notes: '固定器械，适合力竭组', videoQuery: '坐姿推胸机标准动作' },
+          { name: '龙门架夹胸', sets: 3, reps: '12-15', notes: '孤立胸肌中缝', videoQuery: '龙门架夹胸标准动作' },
         ],
       },
       {
@@ -122,6 +100,7 @@ export const splitPlans: SplitPlan[] = [
           { name: '单臂哑铃划船', sets: 3, reps: '10-12', videoQuery: '单臂哑铃划船教学' },
           { name: '牧师凳弯举', sets: 4, reps: '10-12', videoQuery: '牧师凳弯举标准动作' },
           { name: '集中弯举', sets: 3, reps: '12-15', videoQuery: '集中弯举正确做法' },
+          { name: '坐姿划船机', sets: 3, reps: '10-12', notes: '固定器械，安全稳定', videoQuery: '坐姿划船机标准动作' },
         ],
       },
       {
@@ -134,6 +113,7 @@ export const splitPlans: SplitPlan[] = [
           { name: '面拉', sets: 4, reps: '15-20', notes: '后束训练', videoQuery: '面拉标准动作教学' },
           { name: '卷腹', sets: 4, reps: '20', videoQuery: '卷腹正确做法' },
           { name: '俄罗斯转体', sets: 4, reps: '20', videoQuery: '俄罗斯转体标准动作' },
+          { name: '坐姿推肩机', sets: 3, reps: '10-12', notes: '固定器械，肩部训练收尾', videoQuery: '坐姿推肩机标准动作' },
         ],
       },
       {
@@ -146,6 +126,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '罗马尼亚硬拉', sets: 4, reps: '8-12', videoQuery: '罗马尼亚硬拉正确姿势' },
           { name: '腿弯举', sets: 4, reps: '12-15', videoQuery: '腿弯举正确姿势' },
           { name: '站姿提踵', sets: 5, reps: '15-20', videoQuery: '站姿提踵训练' },
+          { name: '哈克深蹲机', sets: 3, reps: '10-12', notes: '固定器械，安全蹲腿', videoQuery: '哈克深蹲机标准动作' },
+          { name: '坐姿腿弯举', sets: 3, reps: '12-15', notes: '孤立腘绳肌', videoQuery: '坐姿腿弯举标准动作' },
         ],
       },
     ],
@@ -163,6 +145,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '双杠臂屈伸', sets: 4, reps: '8-12', videoQuery: '双杠臂屈伸标准动作' },
           { name: '哑铃飞鸟', sets: 3, reps: '12-15', videoQuery: '哑铃飞鸟标准动作' },
           { name: '绳索夹胸', sets: 3, reps: '12-15', videoQuery: '绳索夹胸标准动作' },
+          { name: '坐姿推胸机', sets: 3, reps: '10-12', notes: '固定器械收尾，安全力竭', videoQuery: '坐姿推胸机标准动作' },
+          { name: '龙门架夹胸', sets: 3, reps: '12-15', notes: '孤立胸肌中缝', videoQuery: '龙门架夹胸标准动作' },
         ],
       },
       {
@@ -174,6 +158,7 @@ export const splitPlans: SplitPlan[] = [
           { name: 'T杠划船', sets: 4, reps: '8-12', videoQuery: 'T杠划船正确姿势' },
           { name: '高位下拉', sets: 3, reps: '10-12', videoQuery: '高位下拉标准动作' },
           { name: '面拉', sets: 4, reps: '15-20', notes: '后束+肩袖健康', videoQuery: '面拉标准动作教学' },
+          { name: '坐姿划船机', sets: 3, reps: '10-12', notes: '固定器械，安全增力', videoQuery: '坐姿划船机标准动作' },
         ],
       },
       {
@@ -185,6 +170,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '保加利亚分腿蹲', sets: 3, reps: '10-12', videoQuery: '保加利亚分腿蹲教学' },
           { name: '腿弯举', sets: 4, reps: '12-15', videoQuery: '腿弯举正确姿势' },
           { name: '站姿提踵', sets: 5, reps: '15-20', videoQuery: '站姿提踵训练' },
+          { name: '哈克深蹲机', sets: 3, reps: '10-12', notes: '固定器械，安全蹲腿', videoQuery: '哈克深蹲机标准动作' },
+          { name: '坐姿腿屈伸', sets: 3, reps: '12-15', notes: '孤立股四头肌收尾', videoQuery: '坐姿腿屈伸标准动作' },
         ],
       },
       {
@@ -196,6 +183,7 @@ export const splitPlans: SplitPlan[] = [
           { name: '哑铃前平举', sets: 3, reps: '12-15', videoQuery: '哑铃前平举标准动作' },
           { name: '面拉', sets: 4, reps: '15-20', videoQuery: '面拉标准动作教学' },
           { name: '阿诺德推举', sets: 3, reps: '10-12', videoQuery: '阿诺德推举教学' },
+          { name: '坐姿推肩机', sets: 3, reps: '10-12', notes: '固定器械收尾', videoQuery: '坐姿推肩机标准动作' },
         ],
       },
       {
@@ -208,6 +196,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '锤式弯举', sets: 3, reps: '12-15', videoQuery: '锤式弯举正确做法' },
           { name: '卷腹', sets: 4, reps: '20', videoQuery: '卷腹正确做法' },
           { name: '悬垂举腿', sets: 4, reps: '15-20', videoQuery: '悬垂举腿正确做法' },
+          { name: '龙门架绳索弯举', sets: 3, reps: '12-15', notes: '固定器械，孤立肱二头', videoQuery: '龙门架绳索弯举标准动作' },
+          { name: 'V杠下压', sets: 3, reps: '12-15', notes: '固定器械，孤立肱三头', videoQuery: 'V杠下压标准动作' },
         ],
       },
     ],
@@ -225,6 +215,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '哑铃坐姿推举', sets: 3, reps: '12-15', videoQuery: '哑铃坐姿推举' },
           { name: '开合跳', sets: 3, reps: '30秒', notes: '有氧间歇', videoQuery: '开合跳燃脂' },
           { name: '平板支撑', sets: 3, reps: '45秒', videoQuery: '平板支撑标准动作' },
+          { name: '坐姿推胸机', sets: 3, reps: '15-20', notes: '固定器械，高次数燃脂', videoQuery: '坐姿推胸机标准动作' },
+          { name: '坐姿划船机', sets: 3, reps: '15-20', notes: '固定器械，高次数燃脂', videoQuery: '坐姿划船机标准动作' },
         ],
       },
       {
@@ -258,6 +250,8 @@ export const splitPlans: SplitPlan[] = [
           { name: '哑铃侧平举', sets: 4, reps: '15-20', videoQuery: '哑铃侧平举' },
           { name: '绳索下压', sets: 3, reps: '15-20', videoQuery: '绳索下压' },
           { name: '锤式弯举', sets: 3, reps: '15-20', videoQuery: '锤式弯举' },
+          { name: '坐姿推肩机', sets: 3, reps: '15-20', notes: '固定器械，高次数收尾', videoQuery: '坐姿推肩机标准动作' },
+          { name: '龙门架夹胸', sets: 3, reps: '15-20', notes: '固定器械，高次数收尾', videoQuery: '龙门架夹胸标准动作' },
         ],
       },
       {

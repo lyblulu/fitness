@@ -30,7 +30,12 @@
 
 @layer components {
   .section-title {
-    @apply font-display text-4xl md:text-5xl lg:text-6xl uppercase tracking-wider text-white;
+    @apply font-display text-4xl md:text-5xl lg:text-6xl uppercase tracking-wider text-white relative inline-block;
+  }
+
+  .section-title::after {
+    content: '';
+    @apply absolute -bottom-3 left-1/2 -translate-x-1/2 h-1 w-16 bg-gradient-to-r from-gym-accent to-gym-gold rounded-full;
   }
 
   .section-subtitle {
@@ -38,24 +43,74 @@
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-gym-accent/10;
+    @apply transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-gym-accent/10;
   }
 
   .btn-primary {
     @apply inline-block px-8 py-3 bg-gym-accent text-white font-bold uppercase tracking-wider
-           rounded-sm transition-all duration-300 hover:bg-white hover:text-gym-dark;
+           rounded-sm transition-all duration-300 hover:bg-white hover:text-gym-dark
+           hover:shadow-[0_0_25px_rgba(255,77,0,0.4)];
   }
 
   .btn-ghost {
     @apply inline-block px-8 py-3 border border-gym-accent text-gym-accent font-bold uppercase tracking-wider
-           rounded-sm transition-all duration-300 hover:bg-gym-accent hover:text-white;
+           rounded-sm transition-all duration-300 hover:bg-gym-accent hover:text-white
+           hover:shadow-[0_0_25px_rgba(255,77,0,0.3)];
   }
 
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-gym-accent via-gym-gold to-gym-accent;
+    background-size: 200% auto;
+    animation: shimmer 3s ease-in-out infinite;
   }
 
   .glass-card {
-    @apply bg-gym-card/80 backdrop-blur-sm border border-white/5 rounded-sm;
+    @apply bg-gym-card/80 backdrop-blur-sm border border-white/5 rounded-sm
+           transition-all duration-500;
   }
+
+  .glass-card:hover {
+    @apply border-gym-accent/20 shadow-[0_0_30px_rgba(255,77,0,0.08)];
+  }
+
+  .nav-link {
+    @apply relative text-sm uppercase tracking-wider transition-colors duration-300;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 w-0 h-0.5 bg-gym-accent transition-all duration-300 rounded-full;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-full;
+  }
+
+  .glow-dot {
+    @apply w-1.5 h-1.5 bg-gym-accent rounded-full inline-block;
+    box-shadow: 0 0 8px rgba(255, 77, 0, 0.6);
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(255, 77, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 77, 0, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
