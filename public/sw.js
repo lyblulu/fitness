@@ -1,8 +1,8 @@
 const CACHE_NAME = "iron-blog-v1";
 
 const PRECACHE_URLS = [
-  "/fitness/",
-  "/fitness/index.html",
+  "/",
+  "/index.html",
 ];
 
 self.addEventListener("install", (event) => {

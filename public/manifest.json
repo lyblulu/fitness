@@ -2,24 +2,24 @@
   "name": "IRON BLOG - 健身训练与营养",
   "short_name": "IRON BLOG",
   "description": "健身训练计划、营养饮食计算、健身社区一站式平台",
-  "start_url": "/fitness/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#ff4d00",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/fitness/pwa-icon-192.jpg",
+      "src": "/pwa-icon-192.jpg",
       "sizes": "192x192",
       "type": "image/jpeg"
     },
     {
-      "src": "/fitness/pwa-icon-512.jpg",
+      "src": "/pwa-icon-512.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     },
     {
-      "src": "/fitness/pwa-icon-512.jpg",
+      "src": "/pwa-icon-512.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "maskable"
