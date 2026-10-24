@@ -4,9 +4,15 @@ import {
   KeyRound, AlertCircle, ImagePlus, X,
 } from "lucide-react";
 
-const API_KEY_STORAGE = "glm_api_key";
-// GitHub Pages / 本地开发没有 /api 函数,回退到 Vercel 部署上的代理
-const FALLBACK_API = "https://fitness-one-bice.vercel.app/api/analyze";
+const API_KEY_STORAGE = "sf_api_key";
+// 硅基流动支持浏览器 CORS 直连(大陆可达),免费视觉模型 Qwen2.5-VL
+const SF_API = "https://api.siliconflow.cn/v1/chat/completions";
+const SF_MODEL = "Qwen/Qwen2.5-VL-7B-Instruct";
+
+const SCAN_PROMPT = `你是营养分析专家。识别图片中的食物,估算一整份的营养成分。
+只输出一个JSON对象,不要输出任何其他内容,格式:
+{"name":"食物名称","calories":整数,"protein":整数,"carbs":整数,"fat":整数,"note":"一句话营养建议"}
+其中calories单位为千卡,protein/carbs/fat单位为克,均为整数估算值。多种食物时合并估算总量。`;
 
 interface NutritionResult {
   name: string;
@@ -39,26 +45,60 @@ function compressImage(file: File): Promise<string> {
   });
 }
 
-async function callAnalyze(apiKey: string, imageBase64: string): Promise<NutritionResult> {
-  const body = JSON.stringify({ apiKey, imageBase64 });
-  let res = await fetch("/api/analyze", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body,
-  }).catch(() => null);
+function extractJson(text: string): NutritionResult {
+  const cleaned = String(text).replace(/```json|```/g, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("模型返回格式异常,请重试一次");
+  return JSON.parse(cleaned.slice(start, end + 1));
+}
 
-  // 静态部署(GitHub Pages)或本地开发没有 /api 函数
-  if (!res || res.status === 404 || res.status === 405) {
-    res = await fetch(FALLBACK_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body,
-    });
-  }
+function toInt(v: unknown): number {
+  const n = Math.round(Number(v));
+  return Number.isFinite(n) && n > 0 ? Math.min(n, 10000) : 0;
+}
+
+async function callAnalyze(apiKey: string, imageBase64: string): Promise<NutritionResult> {
+  const res = await fetch(SF_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: SF_MODEL,
+      temperature: 0.1,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { type: "image_url", image_url: { url: imageBase64 } },
+            { type: "text", text: SCAN_PROMPT },
+          ],
+        },
+      ],
+    }),
+  });
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "识别失败,请稍后再试");
-  return data as NutritionResult;
+  if (!res.ok) {
+    if (res.status === 401) throw new Error("API Key 无效或已过期,请检查后重新填写");
+    if (res.status === 429) throw new Error("请求过于频繁,请稍后再试");
+    throw new Error(data?.message || data?.error?.message || `识别服务返回错误(${res.status})`);
+  }
+
+  const content = data?.choices?.[0]?.message?.content;
+  if (!content) throw new Error("模型未返回识别结果,请重试一次");
+
+  const parsed = extractJson(content);
+  return {
+    name: String(parsed.name || "未知食物").slice(0, 50),
+    calories: toInt(parsed.calories),
+    protein: toInt(parsed.protein),
+    carbs: toInt(parsed.carbs),
+    fat: toInt(parsed.fat),
+    note: String(parsed.note || "").slice(0, 200),
+  };
 }
 
 export default function FoodScanner() {
@@ -209,7 +249,7 @@ export default function FoodScanner() {
                   <div>
                     <label className="flex items-center gap-2 text-gym-text/70 text-sm mb-2">
                       <KeyRound className="w-4 h-4 text-gym-accent" />
-                      智谱 API Key
+                      硅基流动 API Key
                     </label>
                     <div className="flex gap-2">
                       <input
@@ -230,12 +270,12 @@ export default function FoodScanner() {
                     <p className="text-gym-muted text-xs mt-2">
                       Key 只保存在你自己的浏览器里。还没有?
                       <a
-                        href="https://open.bigmodel.cn/usercenter/apikeys"
+                        href="https://cloud.siliconflow.cn/account/ak"
                         target="_blank"
                         rel="noreferrer"
                         className="text-gym-accent hover:underline ml-1"
                       >
-                        免费领取 glm-4v-flash 的 Key
+                        免费注册硅基流动领取 Key
                       </a>
                     </p>
                   </div>
