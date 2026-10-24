@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "check": "tsc -b --noEmit",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "deploy:vercel": "npm run build && node C:/vercel-shim/vercel-patch.cjs C:/vercel-shim/node_modules/vercel/dist/index.js deploy --prod --yes"
   },
   "dependencies": {
     "clsx": "^2.1.1",
