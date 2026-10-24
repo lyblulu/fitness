@@ -7,12 +7,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:gp": "tsc -b && vite build --mode github-pages",
     "lint": "eslint .",
     "preview": "vite preview",
     "check": "tsc -b --noEmit",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "deploy:vercel": "npm run build && node C:/vercel-shim/vercel-patch.cjs C:/vercel-shim/node_modules/vercel/dist/index.js deploy --prod --yes"
+    "deploy:vercel": "npm run build && node C:/vercel-shim/vercel-patch.cjs C:/vercel-shim/node_modules/vercel/dist/index.js deploy --prod --yes",
+    "deploy:gh-pages": "npm run build:gp && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\" && gh-pages -d dist -r https://github.com/lyblulu/fitness.git"
   },
   "dependencies": {
     "clsx": "^2.1.1",

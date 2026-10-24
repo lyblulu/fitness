@@ -1,8 +1,9 @@
-const CACHE_NAME = "iron-blog-v1";
+const CACHE_NAME = "iron-blog-v2";
 
+// 相对路径基于 SW 脚本所在目录解析,兼容 GitHub Pages 子路径部署
 const PRECACHE_URLS = [
-  "/",
-  "/index.html",
+  "./",
+  "./index.html",
 ];
 
 self.addEventListener("install", (event) => {
