@@ -2,6 +2,7 @@ import TrainingPhilosophy from "@/components/Training/TrainingPhilosophy";
 import SplitPlan from "@/components/Training/SplitPlan";
 import HomeTraining from "@/components/Training/HomeTraining";
 import ExerciseLibrary from "@/components/Training/ExerciseLibrary";
+import OneRepMax from "@/components/Training/OneRepMax";
 
 export default function Training() {
   return (
@@ -11,6 +12,7 @@ export default function Training() {
       <SplitPlan />
       <HomeTraining />
       <ExerciseLibrary />
+      <OneRepMax />
     </main>
   );
 }
