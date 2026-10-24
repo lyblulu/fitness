@@ -14,7 +14,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "deploy:vercel": "npm run build && node C:/vercel-shim/vercel-patch.cjs C:/vercel-shim/node_modules/vercel/dist/index.js deploy --prod --yes",
-    "deploy:gh-pages": "npm run build:gp && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html')\" && gh-pages -d dist -r https://github.com/lyblulu/fitness.git"
+    "deploy:gh-pages": "npm run build:gp && node -e \"require('fs').copyFileSync('dist/index.html','dist/404.html');const fs=require('fs'),p=require('path');(function rm(d){for(const f of fs.readdirSync(d)){const fp=p.join(d,f);fs.statSync(fp).isDirectory()?rm(fp):f.endsWith('.map')&&fs.unlinkSync(fp)}})('dist')\" && gh-pages -d dist -r https://github.com/lyblulu/fitness.git"
   },
   "dependencies": {
     "clsx": "^2.1.1",

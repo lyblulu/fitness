@@ -32,7 +32,7 @@ function PageLoading() {
 export default function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <ScrollToTop />
         <div className="min-h-screen bg-gym-dark flex flex-col">
           <Header />
