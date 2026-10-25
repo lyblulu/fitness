@@ -5,9 +5,20 @@ import {
 } from "lucide-react";
 
 const API_KEY_STORAGE = "sf_api_key";
-// 硅基流动支持浏览器 CORS 直连(大陆可达),免费视觉模型 Qwen2.5-VL
+const MODEL_STORAGE = "sf_model";
+// 硅基流动支持浏览器 CORS 直连(大陆可达),视觉模型在保存 Key 时自动发现
 const SF_API = "https://api.siliconflow.cn/v1/chat/completions";
-const SF_MODEL = "Qwen/Qwen2.5-VL-7B-Instruct";
+const SF_MODELS_API = "https://api.siliconflow.cn/v1/models";
+const MODEL_FALLBACK = "Qwen/Qwen2.5-VL-7B-Instruct";
+
+// 按优先级排序的候选视觉模型(名称含 VL),前面的优先
+const MODEL_PREFERENCE = [
+  "Qwen/Qwen2.5-VL-7B-Instruct",
+  "Qwen/Qwen3-VL-8B-Instruct",
+  "Qwen/Qwen2.5-VL-32B-Instruct",
+  "Qwen/Qwen2-VL-7B-Instruct",
+  "Qwen/Qwen2.5-VL-72B-Instruct",
+];
 
 const SCAN_PROMPT = `你是营养分析专家。识别图片中的食物,估算一整份的营养成分。
 只输出一个JSON对象,不要输出任何其他内容,格式:
@@ -58,7 +69,25 @@ function toInt(v: unknown): number {
   return Number.isFinite(n) && n > 0 ? Math.min(n, 10000) : 0;
 }
 
+// 验证 Key 并从账号可用模型中挑选视觉模型(名称含 VL 的)
+async function verifyAndPickModel(apiKey: string): Promise<string> {
+  const res = await fetch(SF_MODELS_API, { headers: { Authorization: `Bearer ${apiKey}` } });
+  if (res.status === 401) throw new Error("API Key 无效,请检查是否复制完整");
+  if (!res.ok) throw new Error(`无法验证 Key(${res.status}),请稍后再试`);
+  const data = await res.json().catch(() => null);
+  const ids: string[] = Array.isArray(data?.data)
+    ? data.data.map((m: { id?: string }) => String(m?.id || "")).filter(Boolean)
+    : [];
+  const visionModels = ids.filter((id) => /VL/i.test(id));
+  for (const pref of MODEL_PREFERENCE) {
+    if (visionModels.includes(pref)) return pref;
+  }
+  // 没有命中偏好列表就用第一个 VL 模型;一个都没有则回退默认(识别时再报具体错误)
+  return visionModels[0] || MODEL_FALLBACK;
+}
+
 async function callAnalyze(apiKey: string, imageBase64: string): Promise<NutritionResult> {
+  const model = localStorage.getItem(MODEL_STORAGE) || MODEL_FALLBACK;
   const res = await fetch(SF_API, {
     method: "POST",
     headers: {
@@ -66,7 +95,7 @@ async function callAnalyze(apiKey: string, imageBase64: string): Promise<Nutriti
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: SF_MODEL,
+      model,
       temperature: 0.1,
       messages: [
         {
@@ -82,12 +111,18 @@ async function callAnalyze(apiKey: string, imageBase64: string): Promise<Nutriti
 
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    if (res.status === 401) throw new Error("API Key 无效或已过期,请检查后重新填写");
+    if (res.status === 401) throw new Error("API Key 无效或已过期,请删除后重新填写");
     if (res.status === 429) throw new Error("请求过于频繁,请稍后再试");
-    throw new Error(data?.message || data?.error?.message || `识别服务返回错误(${res.status})`);
+    const detail = data?.message || data?.error?.message || "";
+    if (detail.includes("Model") || detail.includes("model") || detail.includes("不存在")) {
+      throw new Error(`模型 ${model} 不可用,请点击"更换 Key"重新保存一次以自动选择可用模型`);
+    }
+    throw new Error(detail || `识别服务返回错误(${res.status})`);
   }
 
-  const content = data?.choices?.[0]?.message?.content;
+  const content = Array.isArray(data?.choices?.[0]?.message?.content)
+    ? data.choices[0].message.content.filter((c: { type?: string }) => c.type === "text").map((c: { text?: string }) => c.text).join("")
+    : data?.choices?.[0]?.message?.content;
   if (!content) throw new Error("模型未返回识别结果,请重试一次");
 
   const parsed = extractJson(content);
@@ -110,6 +145,8 @@ export default function FoodScanner() {
   const [apiKey, setApiKey] = useState(() => localStorage.getItem(API_KEY_STORAGE) || "");
   const [keyInput, setKeyInput] = useState("");
   const [showKeyInput, setShowKeyInput] = useState(() => !localStorage.getItem(API_KEY_STORAGE));
+  const [verifying, setVerifying] = useState(false);
+  const [keyError, setKeyError] = useState<string | null>(null);
 
   const handlePickFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -125,7 +162,11 @@ export default function FoodScanner() {
   };
 
   const handleAnalyze = async () => {
-    if (!imageData || !apiKey) return;
+    if (!imageData) return;
+    if (!apiKey) {
+      setError("请先在下方填写并保存 API Key(免费注册即可获得),再开始识别");
+      return;
+    }
     setAnalyzing(true);
     setError(null);
     setResult(null);
@@ -138,13 +179,23 @@ export default function FoodScanner() {
     }
   };
 
-  const handleSaveKey = () => {
+  const handleSaveKey = async () => {
     const trimmed = keyInput.trim();
     if (!trimmed) return;
-    localStorage.setItem(API_KEY_STORAGE, trimmed);
-    setApiKey(trimmed);
-    setKeyInput("");
-    setShowKeyInput(false);
+    setVerifying(true);
+    setKeyError(null);
+    try {
+      const model = await verifyAndPickModel(trimmed);
+      localStorage.setItem(API_KEY_STORAGE, trimmed);
+      localStorage.setItem(MODEL_STORAGE, model);
+      setApiKey(trimmed);
+      setKeyInput("");
+      setShowKeyInput(false);
+    } catch (err) {
+      setKeyError(err instanceof Error ? err.message : "Key 验证失败,请稍后再试");
+    } finally {
+      setVerifying(false);
+    }
   };
 
   return (
@@ -261,23 +312,33 @@ export default function FoodScanner() {
                       />
                       <button
                         onClick={handleSaveKey}
-                        disabled={!keyInput.trim()}
-                        className="px-4 py-2.5 bg-gym-card text-gym-text/80 text-xs font-display uppercase tracking-wider rounded-sm border border-white/5 hover:text-white disabled:opacity-40"
+                        disabled={!keyInput.trim() || verifying}
+                        className="px-4 py-2.5 bg-gym-card text-gym-text/80 text-xs font-display uppercase tracking-wider rounded-sm border border-white/5 hover:text-white disabled:opacity-40 inline-flex items-center gap-1.5"
                       >
-                        保存
+                        {verifying ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            验证中
+                          </>
+                        ) : (
+                          "保存"
+                        )}
                       </button>
                     </div>
-                    <p className="text-gym-muted text-xs mt-2">
-                      Key 只保存在你自己的浏览器里。还没有?
-                      <a
-                        href="https://cloud.siliconflow.cn/account/ak"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-gym-accent hover:underline ml-1"
-                      >
-                        免费注册硅基流动领取 Key
-                      </a>
-                    </p>
+                    {keyError && <p className="text-red-400 text-xs mt-2">{keyError}</p>}
+                    {!keyError && (
+                      <p className="text-gym-muted text-xs mt-2">
+                        保存时会自动验证并选择可用的识别模型。Key 只存在你自己的浏览器里。还没有?
+                        <a
+                          href="https://cloud.siliconflow.cn/account/ak"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-gym-accent hover:underline ml-1"
+                        >
+                          免费注册硅基流动领取 Key
+                        </a>
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
